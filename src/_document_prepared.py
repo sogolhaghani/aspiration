@@ -3,8 +3,8 @@ import _utils as ut
 _doc = ['Thinking fast and Slow',
 'Theories of Personality',
 'WHY MEN LOVE Bitches']
-_read_directory = '../data/'
-_out_directory = '../out/'
+_read_directory = './data/'
+_out_directory = './out/'
 
 print('Lets go =>>>>')
 for _name in _doc:

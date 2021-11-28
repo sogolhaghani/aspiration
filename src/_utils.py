@@ -3,6 +3,8 @@ import os
 import unicodedata
 import re
 from collections import Counter
+import spacy
+
 
 def remove_control_characters(s):
     return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
@@ -24,11 +26,12 @@ def _cleansData(_read_directory, _csv_name, _write_directory, _file_name):
             if line.strip() and (len(token) > 1 or (len(token) == 1 and token[len(token) - 1].endswith('.\n')) ) and c[line]==1:
                 out.write(line)
 
+    nlp = spacy.load("en_core_web_sm")
+    nlp.max_length = 10300000 # or even higher
     with open(_read_directory +_temp + _csv_name, 'r') as inp, open(_write_directory + _file_name, 'w') as out:    
-        for line in inp:        
-            line = re.sub("[\(\[].*?[\)\]]", "", line)
-            out.write(line) 
+        for line in inp:
+            doc = nlp(line)
+            assert doc.has_annotation("SENT_START")
+            for sent in doc.sents:
+                out.write(sent.text + '\n')
     os.remove(_read_directory +_temp + _csv_name)   
-
-# _convertPDFToCSV('../data/','3.pdf' ,'../out/','3.txt' )   
-# _cleansData('../out/','3.txt','../out/','3.txt')   
