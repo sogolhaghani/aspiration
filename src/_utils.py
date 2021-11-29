@@ -6,6 +6,8 @@ from collections import Counter
 import spacy
 
 
+special_characters = "•©@#$^&*"
+
 def remove_control_characters(s):
     return "".join(ch for ch in s if unicodedata.category(ch)[0]!="C")
 
@@ -33,5 +35,7 @@ def _cleansData(_read_directory, _csv_name, _write_directory, _file_name):
             doc = nlp(line)
             assert doc.has_annotation("SENT_START")
             for sent in doc.sents:
+                if any(c in special_characters for c in sent.text):
+                    continue
                 out.write(sent.text + '\n')
     os.remove(_read_directory +_temp + _csv_name)   
