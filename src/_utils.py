@@ -24,7 +24,7 @@ def _cleansData(_read_directory, _csv_name, _write_directory, _file_name):
             token = line.split(' ')
 
             if line.strip() and (len(token) > 1 or (len(token) == 1 and token[len(token) - 1].endswith('.\n')) ) and c[line]==1:
-                out.write(line)
+                out.write(line + ' ')
 
     nlp = spacy.load("en_core_web_sm")
     nlp.max_length = 10300000 # or even higher
