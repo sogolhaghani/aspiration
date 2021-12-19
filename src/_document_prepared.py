@@ -1,8 +1,8 @@
 import _utils as ut
 
 _doc = [
-#     'Thinking fast and Slow',
-# 'Theories of Personality',
+    'Thinking fast and Slow',
+'Theories of Personality',
 'WHY MEN LOVE Bitches'
 ]
 _read_directory = './data/'
