@@ -6,7 +6,7 @@ from collections import Counter
 import pandas as pd
 
 import spacy
-import neuralcoref
+# import neuralcoref
 
 
 
