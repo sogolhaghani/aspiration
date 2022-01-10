@@ -20,13 +20,19 @@ def _convertPDFToCSV(_read_directory, _pdf_name, _write_directory, _file_name):
     text_file = open(_write_directory + _file_name,'w')
     text_file.write(text.decode("UTF-8"))
 
+def _detect_nsubj(doc):
+    _sub = []
+    for chunk in doc.noun_chunks:
+        if chunk.root.dep_ == 'nsubj' or chunk.root.dep_ == 'nsubjpass':
+            _sub.append(chunk.text)
+    return _sub
 
 def _cleansData(_read_directory, _csv_name, _write_directory, _file_name):
     _temp = 'temp_'
     with open(_read_directory + _csv_name, 'r') as inp, open(_read_directory +_temp + _csv_name, 'w') as out:
         c=Counter(c.strip() for c in inp if c.strip())
         for line in c:
-            line = re.sub("[\(\[].*?[\)\]]", "", line)
+            line = re.sub("[\(\[].*?[\)\]]", "", line.strip())
             token = line.split(' ')
 
             if line.strip() and (len(token) > 1 or (len(token) == 1 and token[len(token) - 1].endswith('.\n')) ) and c[line]==1:
@@ -37,11 +43,12 @@ def _cleansData(_read_directory, _csv_name, _write_directory, _file_name):
     # neuralcoref.add_to_pipe(nlp)
     with open(_read_directory +_temp + _csv_name, 'r') as inp, open(_write_directory + _file_name, 'w') as out:    
         for line in inp:
-            doc = nlp(line)
+            doc = nlp(line.strip())
+            
             # doc._.coref_resolved
             # assert doc.has_annotation("SENT_START")
             for sent in doc.sents:
-                if any(c in special_characters for c in sent.text):
+                if any(c in special_characters for c in sent.text) or (len(_detect_nsubj(sent)) == 0 and len(sent) <= 2):
                     continue
                 out.write(sent.text + '\n')
     os.remove(_read_directory +_temp + _csv_name)   
