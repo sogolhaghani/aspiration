@@ -59,7 +59,7 @@ def _coreferenceResolutionDoc(_read_directory, _csv_name, _write_directory, _fil
     _line_back = 5
     _doc = pd.read_csv(_read_directory + _csv_name, delimiter = "\t", header=None)
     nlp = spacy.load("en_core_web_sm")
-    neuralcoref.add_to_pipe(nlp)
+    # neuralcoref.add_to_pipe(nlp)
     _total = len(_doc)
     _new_doc_coref = ''
     while(_start_index < _total):
